@@ -3,35 +3,34 @@
 Tính năng này được thêm vào như là mặc định trong React 18. Trước đó thì nó chỉ xuất hiện trong React event handler
 
 ```jsx
-// Before React 18 only React events were batched
+// Trước khi React 18 ra mắt:
 
 function handleClick() {
   setCount((c) => c + 1);
   setFlag((f) => !f);
-  // React will only re-render once at the end (that's batching!)
+  // React chỉ re-render 1 lần trong khi mình thay đổi 2 cái state lận
 }
 
 setTimeout(() => {
   setCount((c) => c + 1);
   setFlag((f) => !f);
-  // React will render twice, once for each state update (no batching)
+  // Component re-render 2 lần (đó được gọi là batching)
 }, 1000);
 ```
 
 ```jsx
-// After React 18 updates inside of timeouts, promises,
-// native event handlers or any other event are batched.
+// Sau khi React 18 cập nhật:
 
 function handleClick() {
   setCount((c) => c + 1);
   setFlag((f) => !f);
-  // React will only re-render once at the end (that's batching!)
+  // React sẽ chỉ re-render 1 lần
 }
 
 setTimeout(() => {
   setCount((c) => c + 1);
   setFlag((f) => !f);
-  // React will only re-render once at the end (that's batching!)
+  // Lên React 18 thì khi chạy đoạn setTimeout này React cũng sẽ chỉ re-render 1 lần (đó là batching)
 }, 1000);
 ```
 
