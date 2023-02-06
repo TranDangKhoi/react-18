@@ -162,4 +162,4 @@ Yes, i'm having a headache right now. You can just simply understand that:
 
 - `useEffect` will update the UI (paint) before running the callback inside it. So that's why you saw the number 3 before it went back to 0 => After setting it back to 0 the useEffect ran once more then finished
 
-- `useLayoutEffect` will run the callback inside it before updating the UI (paint). So that's why you didn't see the number 3 because it's checking the if statement condition before painting, if the condition return false then no more painting/updating
+- `useLayoutEffect` will run the callback inside it before updating the UI (paint). So that's why you didn't see the number 3 because it's checking the **if-statement** condition before painting, if the condition return false then no more painting/updating
