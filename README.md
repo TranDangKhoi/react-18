@@ -1,6 +1,6 @@
-# All of these were written by me - Khoi
+### All of these were written by Khoi aka me 😊
 
-## Automatic Batching
+## Automatic Batching 🤖
 
 This feature was implemented as default in React 18. Before React 18, it only appeared in React event handler
 
@@ -29,7 +29,7 @@ setTimeout(() => {
 function handleClick() {
   setCount((c) => c + 1);
   setFlag((f) => !f);
-  // Ditto, still the same output (still re-render only once)
+  // Ditto, still the same output (still re-render only once) 🙄
 }
 
 setTimeout(() => {
@@ -56,7 +56,7 @@ function handleClick() {
 }
 ```
 
-## useLayoutEffect and useEffect
+## useLayoutEffect and useEffect 😎
 
 You might be wondering what're the differences between useEffect and useLayoutEffect? Here's an example of a small difference between useLayoutEffect and useEffect in React:
 
@@ -75,7 +75,7 @@ function Counter() {
 }
 ```
 
-Now let's run and test the code, shall we? I will click the `Increase` button 3 times, 1.. 2.. and then 3.
+Now let's run and test the code, shall we? I will click the `Increase` button 3 times, 1.. 2.. and then 3 💥.
 
 As you can see:
 
@@ -108,7 +108,7 @@ const LoginPage = () => {
 
 Now you try to type into the search bar, for instance: `https://mywebsite.com/log-in` after you've logged in, you will still get to see a glimpse of the login page >:( and YOU don't want that to be happened
 
-### Flowcharts for everyone
+### Flowcharts for everyone 📊
 
 Okay, now if you've understood what i was talking about, we will dive deeper into these two hooks. I had created 2 FigJam files with flowcharts in it:
 
@@ -158,8 +158,38 @@ As you can see in the Figma file i attached up there, useEffect and useLayoutEff
 
   - Branch 2: Same dependencies => Paint => Composite layers => Users see it => Users interact with it
 
-Yes, i'm having a headache right now. You can just simply understand that:
+Yes, i'm having a headache right now 😠🤜🧠. You can just simply understand that:
 
 - `useEffect` will update the UI (paint) before running the callback inside it. So that's why you saw the number 3 before it went back to 0 => After setting it back to 0 the useEffect ran once more then finished
 
 - `useLayoutEffect` will run the callback inside it before updating the UI (paint). So that's why you didn't see the number 3 because it's checking the **if-statement** condition before painting, if the condition return false then no more painting/updating
+
+## useId 😲
+
+**useId** is a hook to help you create an unique ID 😋
+
+```jsx
+function Checkbox() {
+  const id = useId();
+  return (
+    <>
+      <label htmlFor={id}>Do you like React? 😻</label>
+      <input id={id} type="checkbox" name="react" />
+    </>
+  );
+}
+```
+
+> **Usages**:
+
+- Create an unique ID, suitable for `htmlFor` in label tag and `id` in input tag
+
+- If your server return an id `a` but on client it render an id `b` that means your server and client are not synced. `useId` can help you with that, if you work with `NextJS` or `run React on server` you can understand this process quickly, don't mind it when you hasn't known about them 😐
+
+> **Notes**:
+
+Please don't use CSS for this type of unique ID.
+
+Furthermore, its id has a `:` in it, colon isn't supported in `CSS Selectors` and `querySelectorAll` (Actually you can use `\:` but still... NO NO NO NO 🤬)
+
+`useId` should not be used to create keys for a rendered list ❌
