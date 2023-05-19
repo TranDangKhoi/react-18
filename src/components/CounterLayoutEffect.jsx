@@ -5,6 +5,9 @@ function CounterLayoutEffect() {
 
   // First, let's start with the useEffect one:
   useLayoutEffect(() => {
+    for (let i = 0; i < 40000; i++) {
+      console.log(i);
+    }
     if (count === 3) {
       setCount(0);
     }

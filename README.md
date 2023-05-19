@@ -85,28 +85,7 @@ The count number went back to 0 after the `state: count` is equal to 3, but if y
 
 ![Count:3](https://i.ibb.co/z77WNLW/image.png)
 
-This flickering thing will **become very annoying** when you work with redirecting pages in React.
-
-In real-life situation: `You haven't logged in = you won't get the authority to see the "authenticated-permission" pages`.
-
-But if you typed the correct URL into the Google search bar, you will still see a glimpse of that `authenticated-permission page` when using useEffect hook. Example:
-
-```jsx
-const LoginPage = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (loggedIn) {
-      // if you've logged in, you will be redirected back to the homepage
-      navigate("/");
-    } else {
-      // If not then continue directing to the login page
-      navigate("/log-in");
-    }
-  }, []);
-};
-```
-
-Now you try to type into the search bar, for instance: `https://mywebsite.com/log-in` after you've logged in, you will still get to see a glimpse of the login page >:( and YOU don't want that to be happened
+This flickering thing will **become very annoying** when you work with large amount of data data in React. Because in order to load a huge amount of data, you must wait for your browser to fully load before display it properly
 
 ### Flowcharts for everyone 📊
 

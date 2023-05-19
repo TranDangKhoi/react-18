@@ -8,6 +8,9 @@ const CounterEffect = () => {
     setCount((prev) => prev + 1);
   };
   useEffect(() => {
+    for (let i = 0; i < 40000; i++) {
+      console.log(i);
+    }
     if (count === 3) {
       setCount(0);
     }
