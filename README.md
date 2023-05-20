@@ -197,7 +197,7 @@ const Form = () => {
 };
 ```
 
-In the above codes, I added a button tag which has an onClick event that passed in the value of the input's reference.
+In the above codes, I added a button tag which has an onClick event that passed in the `current` property, followed with the focus() function to focus the input.
 
 So now, the users can focus the input when they click on the button. But what if the input is a component ??
 
