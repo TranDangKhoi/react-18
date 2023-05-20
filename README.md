@@ -172,8 +172,8 @@ const Form = () => {
 
 The `inputRef.current` will have input's Javascript functions such as:
 
-- `inputRef.current.focus()`: to focus into the input when you activate focus() through an event
-- `inputRef.current.blur()`: to blur out of the input when you activate blur() through an event
+- `inputRef.current.focus()`: to focus into the input when you activate focus() through an event.
+- `inputRef.current.blur()`: to blur out of the input when you activate blur() through an event.
 
 For example:
 
@@ -220,7 +220,7 @@ const Form = () => {
 };
 ```
 
-Yeah easy, we will use `forwardRef` to send the ref back to the `Form component`
+Yeah easy, we will use `forwardRef` to send the ref back to the `Form component`.
 
 ```jsx
 // passing in props and ref
@@ -240,4 +240,94 @@ const UseImperativeInput = ({ value, setValue }, ref) => {
 export default React.forwardRef(UseImperativeInput);
 ```
 
-And now, we can focus the input after clicking the button once again ^o^. But ... what if I say `we can created a brand new function for this input with useImperativeHandle hook`. Let's say not only focus the input, i want the button to also alert something, and set the value of the input to something else.
+And now, we can focus the input after clicking the button once again ^o^. But ... what if I say `we can created a brand new function for this input with useImperativeHandle hook`. Let's say not only focus the input, i want the button to also alert something, and set the value of the input to something else without passing the `value` and `setValue` props. Okay let's get rid of those props and declare our own state inside the UseImperativeInput component:
+
+```jsx
+const UseImperativeInput = (props, ref) => {
+  const [value, setValue] = useState("");
+  return (
+    <>
+      <input
+        type="text"
+        ref={ref}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        {...props}
+      />
+    </>
+  );
+};
+
+export default React.forwardRef(UseImperativeInput);
+```
+
+Get rid of the unused states in the Form component:
+
+```jsx
+const Form = () => {
+  const inputRef = useRef();
+  return (
+    <form>
+      <UseImperativeInput ref={inputRef}></UseImperativeInput>
+      <button type="button" onClick={() => inputRef.current.focus()}>
+        Focus
+      </button>
+    </form>
+  );
+};
+
+export default Form;
+```
+
+Before doing that, let's explain the hook first. For me, useImperativeHandle let you customize the return values of a ref. Normally, when you use useRef you will only get the functions that suitable for what the ref references to. It let you replace the native functions with your own functions.
+
+Okay now let's use the HOOK inside the UseImperativeInput component:
+
+```jsx
+const UseImperativeInput = (props, ref) => {
+  // Declare our own local state
+  const [value, setValue] = useState("");
+  // Create a brand new ref inside and REMEMBER to reference it to t
+  const inputRef = useRef(null);
+  useImperativeHandle(ref, () => {
+    return {
+      // return a function that was written by you
+      focusInput: () => {
+        inputRef.current.focus();
+        setValue("what is this hook?");
+      },
+    };
+  });
+  return (
+    <>
+      <input
+        type="text"
+        ref={inputRef}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        {...props}
+      />
+    </>
+  );
+};
+
+export default React.forwardRef(UseImperativeInput);
+```
+
+Now in the Form component, you can use the function `focusInput()` for the button.
+
+```jsx
+const Form = () => {
+  const inputRef = useRef();
+  return (
+    <form>
+      <UseImperativeInput ref={inputRef}></UseImperativeInput>
+      <button type="button" onClick={() => inputRef.current.focusInput()}>
+        Focus
+      </button>
+    </form>
+  );
+};
+
+export default Form;
+```

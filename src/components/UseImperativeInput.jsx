@@ -1,7 +1,7 @@
 import React, { useImperativeHandle, useRef, useState } from "react";
 
-const UseImperativeInput = ({ value, setValue }, ref) => {
-  const [secondValue, setSecondValue] = useState("");
+const UseImperativeInput = (props, ref) => {
+  const [value, setValue] = useState("");
   const inputRef = useRef(null);
   useImperativeHandle(ref, () => {
     return {
@@ -16,14 +16,10 @@ const UseImperativeInput = ({ value, setValue }, ref) => {
     <>
       <input
         type="text"
-        value={secondValue}
-        onChange={(e) => setSecondValue(e.target.value)}
-      />
-      <input
-        type="text"
         ref={inputRef}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        {...props}
       />
     </>
   );
