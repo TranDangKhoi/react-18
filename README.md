@@ -75,13 +75,13 @@ function Counter() {
 }
 ```
 
-Now let's run and test the code, shall we? I will click the `Increase` button 3 times, 1.. 2.. and then 3 💥.
+Now let's run and test the code, shall we? I will click the `Increase` button 3 times.
 
 As you can see:
 
 ![Count:0](https://i.ibb.co/TBSx91N/image.png)
 
-The count number went back to 0 after the `state: count` is equal to 3, but if you throttle your computer to lower its performance (in case your PC is too strong), you can see a flicker of the number 3 before it went back to 0
+The count number went back to 0 after the `state: count` is equal to 3, but if you throttle your computer to lower its performance (in case your PC is too strong), you can see a glimpse of the number 3 before it went back to 0
 
 ![Count:3](https://i.ibb.co/z77WNLW/image.png)
 
@@ -108,36 +108,6 @@ Okay, now if you've understood what i was talking about, we will dive deeper int
 For normal computer users aka z00mers, the shortcuts above are not extraneous issues 😉
 
 As you can see in the Figma file i attached up there, useEffect and useLayoutEffect have different life cycles, i will summarize it right here in this markdown
-
-- useEffect: Init the component -> Init the useEffect (Callback hasn't run yet) => Render JSX => Update virtual DOM => Update real DOM (The HTML Elements) => Paint every single needed pixels **`(this is why you see the number 3 before it turn back to 0) after painting the number 3 into the website, the component will re-render again => run the callback inside the useEffect => run the if statement => then set it back to 0`** => Check the dependencies
-
-  - In this **"Check the dependencies"** step, we will split it into 2 branches, one for the **"Changed dependencies"** and one for the **"Same dependencies"**
-
-  - Branch 1: Changed dependencies value => Run callback inside useEffect => Does the callback have setState inside ?
-
-    - Yes: Update state => Composite layers => Users see it => Users interact with it => Re-render => Run from the beginning once again
-
-    - No: Composite layers => Users see it => Users interact with it
-
-  - Branch 2: Same dependencies value => Does the callback have setState inside ?
-
-    - Yes: Update state => Re-render => Run from the beginning once again => Composite layers => Users see it => Users interact with it
-
-    - No: Composite layers => Users see it => Users interact with it
-
-- useLayoutEffect (just a small change): Init the component => Init the useLayoutEffect (Callback hasn't run yet) => Render JSX => Update virtual DOM => Update real DOM (The HTML Elements) => Check the dependencies
-
-  - In this **"Check the dependencies"** step, we will split it into 2 branches, one for the **"Changed dependencies"** and one for the **"Same dependencies"**
-
-  - Branch 1: Changed dependencies => Run callback inside useLayoutEffect => Does the callback have setState inside ?
-
-    - Yes: Set state => Re-render => Run from the beginning
-
-    - No: Paint => Composite layers => Users see it => Users interact with it
-
-  - Branch 2: Same dependencies => Paint => Composite layers => Users see it => Users interact with it
-
-Yes, i'm having a headache right now 😠🤜🧠. You can just simply understand that:
 
 - `useEffect` will update the UI (paint) before running the callback inside it. So that's why you saw the number 3 before it went back to 0 => After setting it back to 0 the useEffect ran once more then finished
 
@@ -169,6 +139,105 @@ function Checkbox() {
 
 Please don't use CSS for this type of unique ID.
 
-Furthermore, its id has a `:` in it, colon isn't supported in `CSS Selectors` and `querySelectorAll` (Actually you can use `\:` but still... NO NO NO NO 🤬)
+Furthermore, its id has a `:` in it, colon isn't supported in `CSS Selectors` and `querySelectorAll` (Actually you can use `\:` but still... NO DON'T USE IT ALONG WITH CSS SELECTORS 🤬)
 
 `useId` should not be used to create keys for a rendered list ❌
+
+## useImperativeHandle
+
+React kinda vaguely explained this hook:
+
+```bash
+`useImperativeHandle` is a React Hook that lets you customize the handle exposed as a ref.
+```
+
+That's true, `useImperativeHandle` is used to handle ref properties. Let's say you're referencing an inputRef into an input element:
+
+```jsx
+const Form = () => {
+  const [value, setValue] = useState("");
+  const inputRef = useRef();
+  return (
+    <form>
+      <input
+        type="text"
+        ref={inputRef}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    </form>
+  );
+};
+```
+
+The `inputRef.current` will have input's Javascript functions such as:
+
+- `inputRef.current.focus()`: to focus into the input when you activate focus() through an event
+- `inputRef.current.blur()`: to blur out of the input when you activate blur() through an event
+
+For example:
+
+```jsx
+const Form = () => {
+  const [value, setValue] = useState("");
+  const inputRef = useRef();
+  return (
+    <form>
+      <input
+        type="text"
+        ref={inputRef}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <button type="button" onClick={() => inputRef.current.focus()}>
+        Focus
+      </button>
+    </form>
+  );
+};
+```
+
+In the above codes, I added a button tag which has an onClick event that passed in the value of the input's reference.
+
+So now, the users can focus the input when they click on the button. But what if the input is a component ??
+
+```jsx
+const Form = () => {
+  const [value, setValue] = useState("");
+  const inputRef = useRef();
+  return (
+    <form>
+      <UseImperativeInput
+        value={value}
+        setValue={setValue}
+        ref={inputRef}
+      ></UseImperativeInput>
+      <button type="button" onClick={() => inputRef.current.focus()}>
+        Focus
+      </button>
+    </form>
+  );
+};
+```
+
+Yeah easy, we will use `forwardRef` to send the ref back to the `Form component`
+
+```jsx
+// passing in props and ref
+const UseImperativeInput = ({ value, setValue }, ref) => {
+  return (
+    <>
+      <input
+        type="text"
+        ref={ref}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+    </>
+  );
+};
+// forwardRef
+export default React.forwardRef(UseImperativeInput);
+```
+
+And now, we can focus the input after clicking the button once again ^o^. But ... what if I say `we can created a brand new function for this input with useImperativeHandle hook`. Let's say not only focus the input, i want the button to also alert something, and set the value of the input to something else.
