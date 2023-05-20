@@ -331,3 +331,17 @@ const Form = () => {
 
 export default Form;
 ```
+
+## useDeferredValue
+
+This hook is almost the same to debounce value. But when you debounce a value, you will have to set a timeout for that value.
+
+This hook is different, it will look for a perfect timeout to make the value debounce, so the application won't be as laggy as it was
+
+Usage:
+
+```jsx
+const [name, setName] = useState("");
+const debounceName = useDeferredValue(name);
+// Then you can use this in your JSX code
+```
